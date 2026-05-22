@@ -52,3 +52,65 @@ from post p
 inner join comments c on p.post_id = c.post_id
 order by
 p.post_id, comment_id;
+
+# left (outer) join
+-- 한번도 안팔린 상품?
+-- left join으로 product를 왼쪽에 두면 -> 모든 상품은 조회됨
+-- 안 팔린건 오른쪽이 null로 표현됨
+
+-- 안팔린 상품만 조회
+-- 한쪽에는 있는데 다른쪽에는 없는것을 찾는 전형적인 outer join
+select
+	p.product_id,
+    p.product_name
+from product p
+left join order_details od on p.product_id = od.product_id
+where od.order_detail_id is null;
+
+-- right join은 방향만 반대
+-- left -> 왼쪽은 다 표현하고 오른쪽은 없으면 null로 표현
+-- right -> 오른쪽은 다 표현하고 왼쪽은 없으면 null로 표현
+
+
+# 상품별 총 판매갯수, 총 매출액
+select
+	p.product_id,
+    p.product_name,
+    ifnull(sum(od.quantity), 0) as 총판매갯수,
+    ifnull(sum(od.quantity * p.price), 0) as 총매출
+from product p
+left join order_details od on p.product_id = od.product_id
+group by
+	p.product_id, product_name -- 중복이름이 없다고 가정
+order by
+	총매출 desc, 총판매갯수 desc;
+
+-- 1) comment가 하나도 없는 post의 title, content 조회
+-- 작성일자 최신순으로 정렬
+select
+	p.title,
+    p.content
+from post p
+left join comments c on p.post_id = c.post_id
+where c.comment_id is null
+order by p.create_at desc;
+
+-- 2) '한아름'이 작성한 모든 댓글과, 그 댓글이 달린 글의 titel
+-- 게시글 작성일자 최신순으로 정렬
+select
+	p.title,
+    c.body
+from post p
+inner join comments c using(post_id) -- inner join 할때 양쪽 컬럼명이 같으면 using사용 가능
+where c.author = '한아름'
+order by
+	p.create_at desc;
+
+# 영화감상[4]
+select
+	concat(p.title, '[', count(c.comment_id), ']')
+from post p
+left join comments c on p.post_id = c.post_id
+group by
+	p.post_id, p.title;
+
