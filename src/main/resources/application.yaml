@@ -1,3 +1,9 @@
 spring:
   application:
     name: koreait
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/koreaitweb2
+    username: root
+    password: steve4804.
+    driver-class-name: com.mysql.cj.jdbc.Driver

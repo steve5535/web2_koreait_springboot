@@ -17,6 +17,6 @@ public class ModifyProductReqDto {
                 .productId(id)
                 .productName(productName)
                 .price(price)
-                .build()
+                .build();
     }
 }
