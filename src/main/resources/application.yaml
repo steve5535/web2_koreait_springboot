@@ -2,8 +2,21 @@ spring:
   application:
     name: koreait
 
+  # JDBC가 MySql에 접속하기 위한 정보
   datasource:
     url: jdbc:mysql://localhost:3306/koreaitweb2
     username: root
     password: steve4804.
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+# MyBatis 설정
+mybatis:
+  # Xml파일로 sql쿼리를 관리할텐데, 자바와 연결할 수 있는 파일들의 위치정의
+  mapper-locations: classpath:mapper/*.xml
+
+  # entity타입을 인식
+  type-aliases-package: com.study.koreait.entity
+
+  configuration:
+    # 자동으로 카멜케이스로 변환해주는 옵션
+    map-underscore-to-camel-case: true

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.koreait.mapper.PostMapper">
+    <!--  ResultMap  -->
+    <!--  select 결과를 자바의 어떤 타입으로 매칭할건지 정의하는 것  -->
+    <resultMap id="postMap" type="com.study.koreait.entity.Post">
+        <!--    pk매핑    -->
+        <id property="postId" column="post_id" />
+        <!--   기본필드 매핑     -->
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+<!--        <result property="createAt" column="create_at" />-->
+        <!--   1:N 관계 매핑     -->
+        <collection property="comments" resultMap="commentsMap" javaType="list" />
+    </resultMap>
+
+    <!--  comments의 resultMap  -->
+    <resultMap id="commentsMap" type="com.study.koreait.entity.Comments">
+        <id property="commentId" column="comment_id" />
+        <result property="author" column="author" />
+        <result property="body" column="body" />
+        </resultMap>
+
+    <!--  SQL   -->
+    <select
+        id="findAll"
+        resultMap="postMap"
+    >
+        select * from post
+    </select>
+
+    <!--  left 조인할때 댓글이 없는 게시글은 빈리스트를 만들어옴  -->
+    <select
+            id="findAllPostsWithComments"
+            resultType="com.study.koreait.entity.Post"
+    >
+        select
+            p.post_id,
+            p.title,
+            p.content,
+<!--            p.create_at,-->
+            c.comment_id,
+            c.author,
+            c.body
+        from post p
+        left join comments c on p.post_id = c.post_id
+        order by p.post_id, c.comment_id
+    </select>
+
+
+</mapper>

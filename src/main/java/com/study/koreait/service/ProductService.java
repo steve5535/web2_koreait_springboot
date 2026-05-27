@@ -3,7 +3,6 @@ package com.study.koreait.service;
 import com.study.koreait.dto.AddProductReqDto;
 import com.study.koreait.dto.FindProductResDto;
 import com.study.koreait.dto.ModifyProductReqDto;
-import com.study.koreait.dto.ProductResDto;
 import com.study.koreait.entity.Product;
 import com.study.koreait.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;

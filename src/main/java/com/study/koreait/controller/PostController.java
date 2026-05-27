@@ -36,4 +36,10 @@ public class PostController {
         int successCount = service.removePost(id);
         return ResponseEntity.ok(successCount + "건 삭제 완료");
     }
+
+    @GetMapping("/all/comments")
+    public ResponseEntity<?> getPostsWithComments() {
+        return ResponseEntity.ok(service.getPostsWithComments());
+    }
+
 }
