@@ -220,7 +220,7 @@ public class ProductJdbcImpl implements ProductRepository {
         }
     }
 
-    // 아래의 메서드를 jdbc코드로 완성기켜 주세요
+    // 아래의 메서드를 jdbc코드로 완성시켜 주세요
     // ps.setString()할때 조립
     @Override
     public List<Product> searchProductByName(String name) {

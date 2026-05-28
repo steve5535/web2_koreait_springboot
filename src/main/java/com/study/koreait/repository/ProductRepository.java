@@ -1,6 +1,5 @@
 package com.study.koreait.repository;
 
-import com.study.koreait.entity.Post;
 import com.study.koreait.entity.Product;
 
 import java.util.List;

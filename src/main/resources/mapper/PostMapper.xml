@@ -12,7 +12,7 @@
         <!--   기본필드 매핑     -->
         <result property="title" column="title" />
         <result property="content" column="content" />
-<!--        <result property="createAt" column="create_at" />-->
+        <result property="createAt" column="create_at" />
         <!--   1:N 관계 매핑     -->
         <collection property="comments" resultMap="commentsMap" javaType="list" />
     </resultMap>
@@ -41,7 +41,7 @@
             p.post_id,
             p.title,
             p.content,
-<!--            p.create_at,-->
+            p.create_at,
             c.comment_id,
             c.author,
             c.body
@@ -49,6 +49,51 @@
         left join comments c on p.post_id = c.post_id
         order by p.post_id, c.comment_id
     </select>
+
+    <insert id="insertPost">
+        insert into
+            post (title, content)
+        values
+            (#{title}, #{content})
+    </insert>
+
+    <insert id="insertPosts">
+        insert into
+            post(title, content)
+        values
+            <foreach
+                    collection="posts"
+                    item="post"
+                    separator=","
+            >
+                (#{post.title}, #{post.content})
+            </foreach>
+    </insert>
+
+    <!--  매개변수 이름을 ${}에 작성가능  -->
+    <delete id="deletePostById">
+        delete from
+            post
+        where
+            post_id = #{id}
+    </delete>
+
+    <select id="detailSearchPosts" resultType="Post">
+        select
+            *
+        from
+            post
+        where
+            1=1
+        <if test="titleKeyword != null and titleKeyword != ''">
+            and title like concat('', #{titleKeyword}, '')
+        </if><if test="contentKeyword != null and contentKeyword != ''">
+            and title like concat('', #{contentKeyword}, '')
+        </if>
+        order by
+            create_at desc
+    </select>
+
 
 
 </mapper>

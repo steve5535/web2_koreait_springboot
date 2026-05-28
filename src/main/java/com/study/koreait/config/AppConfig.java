@@ -10,8 +10,8 @@ public class AppConfig {
     // 컴포넌트 스캔 범위 밖인 라이브러리 클래스들
     // -> bean 등록을 해야할 때
 
-    @Bean // bean 등록메서드
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+//    @Bean // bean 등록메서드
+//    public ObjectMapper objectMapper() {
+//        return new ObjectMapper();
+//    }
 }

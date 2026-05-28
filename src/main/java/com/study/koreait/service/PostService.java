@@ -2,6 +2,7 @@ package com.study.koreait.service;
 
 import com.study.koreait.dto.AddPostReqDto;
 import com.study.koreait.dto.FindPostResDto;
+import com.study.koreait.dto.SearchPostReqDto;
 import com.study.koreait.entity.Post;
 import com.study.koreait.mapper.PostMapper;
 import com.study.koreait.repository.PostRepository;
@@ -17,7 +18,7 @@ public class PostService {
     private final PostMapper mapper;
 
     public List<FindPostResDto> getAllPost() {
-        return repository.findAllPosts()
+        return mapper.findAll()
                 .stream()
                 .map(p -> new FindPostResDto(p.getTitle(), p.getContent()))
                 .toList();
@@ -30,15 +31,26 @@ public class PostService {
     }
 
     public int addPost(AddPostReqDto dto) {
-        return repository.insertPost(dto.toEntity());
+        return mapper.insertPost(dto.toEntity());
     }
 
     public int removePost(int id) {
-        return repository.deletePostById(id);
+        return mapper.deletePostById(id);
     }
 
     // 추후에 dto로 교체
     public List<Post> getPostsWithComments() {
         return mapper.findAllPostsWithComments();
+    }
+
+    public List<FindPostResDto> searchDynamicPosts(SearchPostReqDto dto) {
+        return mapper.detailSearchPosts(dto.getTitleKeyword(), dto.getContentKeyword())
+                .stream()
+                .map(Post::toFindPostResDto)
+                .toList();
+    }
+
+    public int addBulkPosts(List<AddPostReqDto> dtos) {
+        return mapper.insertPosts(dtos.stream().map(AddPostReqDto::toEntity).toList());
     }
 }

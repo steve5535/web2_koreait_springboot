@@ -22,4 +22,11 @@ public class Post {
     // Post:Comments 는 1:n관계
     // 그래프? post.getComments()
     private List<Comments> comments;
+
+    public FindPostResDto toFindPostResDto() {
+        return FindPostResDto.builder()
+                .title(title)
+                .content(content)
+                .build();
+    }
 }
