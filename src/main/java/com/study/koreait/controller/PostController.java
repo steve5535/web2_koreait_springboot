@@ -1,7 +1,8 @@
 package com.study.koreait.controller;
 
-import com.study.koreait.dto.AddPostReqDto;
-import com.study.koreait.dto.SearchPostReqDto;
+import com.study.koreait.dto.req.AddPostReqDto;
+import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.req.SearchPostReqDto;
 import com.study.koreait.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,11 @@ public class PostController {
     public ResponseEntity<?> addPosts(@RequestBody List<AddPostReqDto> dtos) {
         int sc = service.addBulkPosts(dtos);
         return ResponseEntity.status(HttpStatus.CREATED).body(sc + "건 추가완료");
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<?> getPostPage(PageReqDto dto) {
+        return ResponseEntity.ok(service.getPostPage(dto));
     }
 
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.koreait.mapper.OrderMapper">
+
+    <!-- orders -> orderDetails -> product 순서로 조인할 계획   -->
+    <!-- 양방향 참조 조심 product -> orderDetails 조인할 수 있음   -->
+    <resultMap id="ordersMap" type="com.study.koreait.entity.Orders">
+        <id property="orderId" column="order_id"/>
+        <result property="userId" column="user_id" />
+        <result property="orderedAt" column="ordered_at" />
+        <collection property="orderDetails" resultMap="orderDetailMap" />
+    </resultMap>
+
+    <resultMap id="orderDetailMap" type="com.study.koreait.entity.OrderDetails">
+        <id property="orderDetailId" column="order_detail_id" />
+        <result property="quantity" column="quantity" />
+        <association property="product" resultMap="productMap" />
+    </resultMap>
+
+    <resultMap id="productMap" type="com.study.koreait.entity.Product">
+        <id property="productId" column="product_id" />
+        <result property="productName" column="product_name" />
+        <result property="price" column="price"/>
+        <result property="createAt" column="create_at" />
+    </resultMap>
+
+
+
+    <!--  유저별 전체 주문건수. 기간 필터  -->
+    <select id="countOrdersByUser" resultType="long">
+        select
+            count(*)
+        from
+            orders
+        where
+            user_id = #{userId}
+        <if test="from != null">
+            and ordered_at &gt;= #{from}
+        </if>
+        <if test="to != null">
+            and ordered_at &lt; #{to}
+        </if>
+    </select>
+
+    <!--  유저별, 기간별 필터하여, 페이지네이션  -->
+    <!--  구매건수에 limit을 걸어야하기 때문에 서브쿼리로 조회한 후 조인  -->
+    <select id="findOrdersByUserId" resultMap="ordersMap">
+        select
+            o.order_id,
+            o.ordered_at,
+            o.user_id,
+            od.order_detail_id,
+            od.quantity,
+            p.product_id,
+            p.product_name,
+            p.price,
+            p.create_at
+        from (
+            select
+                *
+            from
+                orders
+            where
+                user_id = #{userId}
+            <if test="from != null">
+                and ordered_at &gt; = #{from}
+            </if>
+            <if test="to != null">
+                and ordered_at &lt; #{to}
+            </if>
+            order by ordered_at desc, order_id desc
+            limit #{size} offset #{offset}
+        ) o
+        inner join order_details od on o.order_id = od.order_id
+        inner join product p on od.product_id = p.product_id
+        order by o.ordered_at desc, o.order_id desc, od.order_detail_id
+    </select>
+
+</mapper>

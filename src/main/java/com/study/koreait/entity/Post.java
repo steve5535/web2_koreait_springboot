@@ -1,6 +1,6 @@
 package com.study.koreait.entity;
 
-import com.study.koreait.dto.FindPostResDto;
+import com.study.koreait.dto.res.FindPostResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

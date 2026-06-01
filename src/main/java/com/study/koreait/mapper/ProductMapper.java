@@ -39,4 +39,16 @@ public interface ProductMapper {
     // 컬렉션 파라미터는 @Param으로 명시해야 callection="products"로 받을 수 있음
     int insertProducts(@Param("products") List<Product> products);
 
+    /*
+        페이지네이션 - 전체 데이터를 한번에 조회하는 것(풀 스캔) - x
+        무한스크롤 - 스크롤이 다 내려가면, 기존내용 + 다음 페이지 내용
+    */
+    List<Product> findPage(
+            @Param("offset") int offset,
+            @Param("size") int size
+    );
+
+    // 전체 페이지 수 계산용
+    long countAll();
+
 }

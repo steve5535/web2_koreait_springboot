@@ -1,4 +1,4 @@
-package com.study.koreait.dto;
+package com.study.koreait.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductResDto {
-    private int id;
-    private String name;
-    private int price;
+public class SearchPostReqDto {
+    private String titleKeyword;
+    private String contentKeyword;
 }

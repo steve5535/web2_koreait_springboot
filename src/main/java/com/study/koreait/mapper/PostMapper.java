@@ -30,5 +30,8 @@ public interface PostMapper {
     // collection="list"로 인식시킬 수 있긴 函
     int insertPosts(@Param("posts") List<Post> posts);
 
+    List<Post> findPage(@Param("offset") int offset, @Param("size") int size);
+    long countAll();
+
 
 }

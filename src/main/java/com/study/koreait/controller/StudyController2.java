@@ -1,8 +1,8 @@
 package com.study.koreait.controller;
 
-import com.study.koreait.dto.AddPostReqDto;
-import com.study.koreait.dto.AddProductReqDto;
-import com.study.koreait.dto.ProductResDto;
+import com.study.koreait.dto.req.AddPostReqDto;
+import com.study.koreait.dto.req.AddProductReqDto;
+import com.study.koreait.dto.res.ProductResDto;
 import com.study.koreait.exception.ProductException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

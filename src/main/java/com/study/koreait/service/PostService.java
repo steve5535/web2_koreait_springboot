@@ -1,13 +1,16 @@
 package com.study.koreait.service;
 
-import com.study.koreait.dto.AddPostReqDto;
-import com.study.koreait.dto.FindPostResDto;
-import com.study.koreait.dto.SearchPostReqDto;
+import com.study.koreait.dto.req.AddPostReqDto;
+import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.res.FindPostResDto;
+import com.study.koreait.dto.req.SearchPostReqDto;
+import com.study.koreait.dto.res.PostPageResDto;
 import com.study.koreait.entity.Post;
 import com.study.koreait.mapper.PostMapper;
 import com.study.koreait.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -52,5 +55,28 @@ public class PostService {
 
     public int addBulkPosts(List<AddPostReqDto> dtos) {
         return mapper.insertPosts(dtos.stream().map(AddPostReqDto::toEntity).toList());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public PostPageResDto getPostPage(PageReqDto dto) {
+        int page = Math.max(dto.getPage(), 1);
+        int size = dto.getSize();
+        if (size < 1) size = 10;
+        if (size > 50) size = 50;
+
+        int offset = (page - 1) * size;
+        List<FindPostResDto> items =  mapper.findPage(offset, size)
+                .stream()
+                .map(Post::toFindPostResDto)
+                .toList();
+
+        long totalPostCount = mapper.countAll();
+        int totalPages = (int) totalPostCount / size;
+        if (totalPages % size > 0) totalPages++;
+
+        boolean hasNext = page < totalPages;
+        boolean hasPrev = page > 1;
+
+        return new PostPageResDto(items, page, size, totalPostCount, totalPages, hasNext, hasPrev);
     }
 }

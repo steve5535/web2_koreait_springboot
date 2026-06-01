@@ -1,7 +1,7 @@
 package com.study.koreait.controller;
 
-import com.study.koreait.dto.StudentResDto;
-import com.study.koreait.dto.StudyReqDto;
+import com.study.koreait.dto.res.StudentResDto;
+import com.study.koreait.dto.req.StudyReqDto;
 import com.study.koreait.exception.StudentException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 // RestController 역할 부여 - json만 조달하겠다.

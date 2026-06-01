@@ -109,7 +109,7 @@
     <!-- 매개변수로 List들이 들어올경우 주로 사용   -->
     <!--
     collection은 매개변수로 들어온 list변수명, @Param("변수명")
-    item은 collection에서 하니씩 꺼냈을때 담을 변수면
+    item은 collection에서 하나씩 꺼냈을때 담을 변수명
     separator는 item들 사이에 구분자
     -->
     <insert id="insertProducts">
@@ -125,5 +125,22 @@
             </foreach>
     </insert>
 
+    <select id="findPage" resultType="Product">
+        select
+            *
+        from
+            product
+        order by
+            create_at desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <!--  서비스가 작을때는 count(*) ok, 커진다면 통계테이블을 만들어서 운영하는것 고려  -->
+    <select id="countAll" resultType="long">
+        select
+            count(*)
+        from
+            product
+    </select>
 
 </mapper>

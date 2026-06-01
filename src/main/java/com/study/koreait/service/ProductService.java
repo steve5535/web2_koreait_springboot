@@ -1,11 +1,17 @@
 package com.study.koreait.service;
 
-import com.study.koreait.dto.*;
+import com.study.koreait.dto.req.AddProductReqDto;
+import com.study.koreait.dto.req.ModifyProductReqDto;
+import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.req.SearchProductReqDto;
+import com.study.koreait.dto.res.FindProductResDto;
+import com.study.koreait.dto.res.ProductPageResDto;
 import com.study.koreait.entity.Product;
 import com.study.koreait.mapper.ProductMapper;
 import com.study.koreait.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -73,6 +79,41 @@ public class ProductService {
                 .map(AddProductReqDto::toEntity)
                 .toList();
         return mapper.insertProducts(products);
+    }
+
+    // 쿼리 두개가 하나의 작업(트랜잭션)으로 묶는다.
+    // 안 묶으면, 두 쿼리 사이에 다른 트랜잭션이 insert/delete 해서 items와 total이
+    // 안 맞을 수 있음.
+    // 예외가 발생하면 롤백
+    // 기본값은 RuntimeException 발생시 rollback
+    @Transactional(rollbackFor = Exception.class)
+    public ProductPageResDto getProductPage(PageReqDto dto) {
+        // 1) 입력값 보정
+        int page = dto.getPage();
+        if (page < 1) page = 1;
+
+        int size = dto.getSize();
+        if (size < 1) size = 10;
+        if (size > 50) size = 50; // 너무 크면 서버 부담
+
+        // 2) 한페이지 분량 조회
+        int offset = (page - 1) * size;
+        List<FindProductResDto> items = mapper.findPage(offset, size)
+                .stream()
+                .map(Product::toFindProductResDto)
+                .toList();
+
+        // 3) 전체 갯수
+        long totalProductCount = mapper.countAll();
+        int totalPages = (int) (totalProductCount / size);
+        // 나머지가 0보다 크다면 page + 1
+        if (totalPages % size > 0) totalPages++;
+
+        // 사용자가 요청한 페이지가 최대페이지보다 작으면 다음페이지 있음
+        boolean hasNext = page <totalPages;
+        boolean hasPrev = page > 1;
+
+        return new ProductPageResDto(items, page, size, totalProductCount, totalPages, hasNext, hasPrev);
     }
 
 }

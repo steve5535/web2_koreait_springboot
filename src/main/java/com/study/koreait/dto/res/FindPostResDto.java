@@ -1,4 +1,4 @@
-package com.study.koreait.dto;
+package com.study.koreait.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

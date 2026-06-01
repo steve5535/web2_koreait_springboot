@@ -1,6 +1,6 @@
 package com.study.koreait.entity;
 
-import com.study.koreait.dto.FindProductResDto;
+import com.study.koreait.dto.res.FindProductResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

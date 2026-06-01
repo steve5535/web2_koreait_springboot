@@ -93,6 +93,23 @@
         order by
             create_at desc
     </select>
+    
+    <select id="findPage" resultType="Post">
+        select
+            *
+        from
+            post
+        order by
+            create_at desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        select
+            count(*)
+        from
+            post
+    </select>
 
 
 

@@ -1,8 +1,9 @@
 package com.study.koreait.controller;
 
-import com.study.koreait.dto.AddProductReqDto;
-import com.study.koreait.dto.ModifyProductReqDto;
-import com.study.koreait.dto.SearchProductReqDto;
+import com.study.koreait.dto.req.AddProductReqDto;
+import com.study.koreait.dto.req.ModifyProductReqDto;
+import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.req.SearchProductReqDto;
 import com.study.koreait.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,14 @@ public class ProductController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(successCount + "건 등록 성공");
+    }
+
+    // 쿼리스트링으로 page, size 받아온다
+    // localhost:8080/product/page
+    // localhost:8080/product/page?page=2&size=20
+    @GetMapping("/page")
+    public ResponseEntity<?> getProductPage(PageReqDto dto) {
+        return ResponseEntity.ok(service.getProductPage(dto));
     }
 
 }
