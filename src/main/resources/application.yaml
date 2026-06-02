@@ -4,7 +4,7 @@ spring:
 
   # JDBC가 MySql에 접속하기 위한 정보
   datasource:
-    url: jdbc:mysql://localhost:3306/koreaitweb2
+    url: jdbc:mysql://localhost:3306/koreait_web2
     username: root
     password: steve4804.
     driver-class-name: com.mysql.cj.jdbc.Driver

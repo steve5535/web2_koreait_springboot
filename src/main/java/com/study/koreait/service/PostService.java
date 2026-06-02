@@ -2,9 +2,11 @@ package com.study.koreait.service;
 
 import com.study.koreait.dto.req.AddPostReqDto;
 import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.req.PeriodPageReqDto;
 import com.study.koreait.dto.res.FindPostResDto;
 import com.study.koreait.dto.req.SearchPostReqDto;
 import com.study.koreait.dto.res.PostPageResDto;
+import com.study.koreait.dto.res.UserPostPageResDto;
 import com.study.koreait.entity.Post;
 import com.study.koreait.mapper.PostMapper;
 import com.study.koreait.repository.PostRepository;
@@ -79,4 +81,35 @@ public class PostService {
 
         return new PostPageResDto(items, page, size, totalPostCount, totalPages, hasNext, hasPrev);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public UserPostPageResDto getUserPostPage(String userId, PeriodPageReqDto dto) {
+        int page = dto.getPage();
+        if (page < 1) page = 1;
+
+        int size = dto.getSize();
+        if (size < 1) size = 5;
+        if (size > 50) size = 50;
+        int offset = (page - 1) * size;
+
+        List<Post> posts = mapper.findPostsByUserId(
+                userId, dto.getFromDateTime(), dto.getToDateTime(), offset, size
+        );
+        List<UserPostPageResDto.PostWithCommentsResDto> items = posts.stream()
+                .map(Post::toPostWithCommentsResDto)
+                .toList();
+
+        long total = mapper.countPostsByUserId(
+                userId, dto.getFromDateTime(), dto.getToDateTime()
+        );
+
+        int totalPages = (int) (total / size);
+        if (total % size > 0) totalPages++;
+        boolean hasNext = page < totalPages;
+        boolean hasPrev = page > 1;
+
+
+        return new UserPostPageResDto(items, page, size, total, page, hasNext, hasPrev);
+    }
+
 }

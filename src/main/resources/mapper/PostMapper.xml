@@ -13,6 +13,7 @@
         <result property="title" column="title" />
         <result property="content" column="content" />
         <result property="createAt" column="create_at" />
+        <result property="userId" column="user_id"/>
         <!--   1:N 관계 매핑     -->
         <collection property="comments" resultMap="commentsMap" javaType="list" />
     </resultMap>
@@ -20,7 +21,6 @@
     <!--  comments의 resultMap  -->
     <resultMap id="commentsMap" type="com.study.koreait.entity.Comments">
         <id property="commentId" column="comment_id" />
-        <result property="author" column="author" />
         <result property="body" column="body" />
         </resultMap>
 
@@ -109,6 +109,54 @@
             count(*)
         from
             post
+    </select>
+
+    <select id="findPostsByUserId" resultMap="postMap">
+        select
+            p.post_id,
+            p.title,
+            p.content,
+            p.create_at,
+            c.comment_id,
+            c.body
+        from
+            (
+            select
+                *
+            from
+                post
+            where
+                user_id = #{userId}
+            <if test="from != null">
+                and create_at &gt;= #{from}
+            </if>
+            <if test="to != null">
+                and create_at &lt; #{to}
+            </if>
+            order by
+                create_at desc
+            limit #{size} offset #{offset}
+        ) p
+        left join comments c on p.post_id = c.post_id
+        order by
+            p.create_at desc, c.comment_id
+
+    </select>
+
+    <!--  유저의 게시글을 최신순으로 페이지네이션, 각 게시글에는 댓글들도 같이  -->
+    <select id="countPostsByUserId" resultType="long">
+        select
+            count(*)
+        from
+            post
+        where
+            user_id = #{userId}
+        <if test="from != null">
+            and create_at &gt;= #{from}
+        </if>
+        <if test="to != null">
+            and create_at &lt; #{to}
+        </if>
     </select>
 
 

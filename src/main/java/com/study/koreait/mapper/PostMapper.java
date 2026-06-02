@@ -4,6 +4,7 @@ import com.study.koreait.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // 자바버전 mapper
@@ -32,6 +33,20 @@ public interface PostMapper {
 
     List<Post> findPage(@Param("offset") int offset, @Param("size") int size);
     long countAll();
+
+    List<Post> findPostsByUserId(
+            @Param("userId") String userId,
+            @Param("from")LocalDateTime from,
+            @Param("to")LocalDateTime to,
+            @Param("offset") int offset,
+            @Param("size") int size
+            );
+
+    long countPostsByUserId(
+            @Param("userId") String userId,
+            @Param("from")LocalDateTime from,
+            @Param("to")LocalDateTime to
+    );
 
 
 }

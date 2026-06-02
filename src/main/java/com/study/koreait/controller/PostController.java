@@ -2,6 +2,7 @@ package com.study.koreait.controller;
 
 import com.study.koreait.dto.req.AddPostReqDto;
 import com.study.koreait.dto.req.PageReqDto;
+import com.study.koreait.dto.req.PeriodPageReqDto;
 import com.study.koreait.dto.req.SearchPostReqDto;
 import com.study.koreait.service.PostService;
 import jakarta.validation.Valid;
@@ -62,6 +63,11 @@ public class PostController {
     @GetMapping("/page")
     public ResponseEntity<?> getPostPage(PageReqDto dto) {
         return ResponseEntity.ok(service.getPostPage(dto));
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> getUserPostPage(@PathVariable String userId, PeriodPageReqDto dto) {
+        return ResponseEntity.ok(service.getUserPostPage(userId, dto));
     }
 
 }
