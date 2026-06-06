@@ -20,5 +20,5 @@ public class Users {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
-    private Roles role; // fk대신 객체 가짐 1:1 매핑
+    private Roles roles; // fk대신 객체 가짐 1:1 매핑
 }

@@ -1,5 +1,9 @@
 package com.study.koreait.config;
 
+import com.study.koreait.jwt.JwtAuthenticationEntryPoint;
+import com.study.koreait.jwt.JwtAuthenticationFilter;
+import com.study.koreait.jwt.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -7,12 +11,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig { // 시큐리티 관련 설정만
+
+    // 필터를 빈으로 주입하지않고, 직접 new로 생성한다
+    // Filter로 끝나는 빈이 등록되면, 자동으로 서블릿 필터를 등록함(체인에 등록하는게 x)
+    private final JwtUtil jwtUtil;
 
     // 회원가입시 비밀번호는 평문으로 저장하면 안됨
     // 암호화를 해서 db에 저장해야함.
@@ -21,6 +31,11 @@ public class SecurityConfig { // 시큐리티 관련 설정만
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return new JwtAuthenticationEntryPoint();
     }
 
     // cors 에러
@@ -60,9 +75,15 @@ public class SecurityConfig { // 시큐리티 관련 설정만
                 localhost:8080/post/* -> 단일만 허용 /post/users/11 (x)
              */
             // 인가방식은 우리가 직접 커스텀한 jwt방식을 사용할 것
-            auth.requestMatchers("/post/**").permitAll()
+            auth.requestMatchers("/post/**", "/auth/**").permitAll()
                     .anyRequest().authenticated(); // 모든요청은 인가받으시오
         });
+
+        // 끼워넣기
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+
+        // 필터단 예외 핸들러 등록
+        http.exceptionHandling(eHandler -> eHandler.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
 
         return http.build();
     }

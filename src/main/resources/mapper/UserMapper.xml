@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.koreait.mapper.UserMapper">
+    <!-- RESULT MAP   -->
+    <resultMap id="roleResultMap" type="com.study.koreait.entity.Roles">
+        <id property="roleId" column="role_id" />
+        <result property="roleName" column="role_name" />
+    </resultMap>
+
+    <resultMap id="userResultMap" type="com.study.koreait.entity.Users">
+        <id property="userId" column="user_id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+        <association property="roles" resultMap="roleResultMap" />
+    </resultMap>
+
+    <insert id="addUser">
+        insert into
+            users (user_id, username, password, name, email, role_id)
+        values
+            (#{userId}, #{username}, #{password}, #{name} ,#{email}, 1)
+    </insert>
+
+    <select id="getUserByUsername" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            users u
+        inner join roles r on u.role_id = r.role_id
+        where u.username = #{username}
+    </select>
+
+    <select id="getUserByEmail" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            users u
+        inner join roles r on u.role_id = r.role_id
+        where
+            u.email = #{email}
+    </select>
+
+</mapper>

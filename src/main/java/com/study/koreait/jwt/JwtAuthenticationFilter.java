@@ -30,6 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 1) 예비요청은 검증없이 통과시켜준다
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         // 2) 헤더에서 토큰 추출
