@@ -75,8 +75,9 @@ public class SecurityConfig { // 시큐리티 관련 설정만
                 localhost:8080/post/* -> 단일만 허용 /post/users/11 (x)
              */
             // 인가방식은 우리가 직접 커스텀한 jwt방식을 사용할 것
-            auth.requestMatchers("/post/**", "/auth/**").permitAll()
-                    .anyRequest().authenticated(); // 모든요청은 인가받으시오
+            auth.requestMatchers("/post/**", "/product/**")
+                    .authenticated()
+                    .anyRequest().permitAll();
         });
 
         // 끼워넣기
@@ -84,6 +85,9 @@ public class SecurityConfig { // 시큐리티 관련 설정만
 
         // 필터단 예외 핸들러 등록
         http.exceptionHandling(eHandler -> eHandler.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
+
+        // oauth2 소셜 로그인 설정
+        http.oauth2Login(Customizer.withDefaults());
 
         return http.build();
     }
