@@ -63,4 +63,23 @@
             u.email = #{email}
     </select>
 
+    <select id="getUserById" resultMap="userResultMap">
+        select
+            u.user_id,
+            u.username,
+            u.password,
+            u.name,
+            u.email,
+            u.create_at,
+            u.update_at,
+            r.role_id,
+            r.role_name
+        from
+            users u
+            inner join roles r on u.role_id = r.role_id
+        where
+            u.user_id = #{userId}
+
+    </select>
+
 </mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.study.koreait.mapper.OAuth2UserMapper">
+    <resultMap id="Oauth2UserResultMap" type="com.study.koreait.entity.OAuth2User">
+        <id property="oauth2UserId" column="oauth2_user_id" />
+        <result property="userId" column="user_id" />
+        <result property="provider" column="provider" />
+        <result property="providerUserId" column="provider_user_id" />
+        <result property="createAt" column="create_at" />
+        <result property="updateAt" column="update_at" />
+    </resultMap>
+
+    <!-- auto increment를 사용할때, 서버는 id값을 알 수 없음
+       insert 이후에 id가 뭔지 필요할때
+       -->
+    <insert id="insertOAuth2User" useGeneratedKeys="true" keyProperty="oauth2UserId">
+        insert into
+            oauth2_user (user_id, provider, provider_user_id)
+        values
+            (#{userId}, #{provider}, #{providerUserId})
+    </insert>
+
+    <select id="findOAuth2UserByProviderInfo" resultMap="Oauth2UserResultMap">
+        select
+            oauth2_user_id,
+            user_id,
+            provider,
+            provider_user_id,
+            create_at,
+            update_at
+        from
+            oauth2_user
+        where
+            provider = #{provider}
+        and provider_user_id = #{providerUserId}
+
+    </select>
+
+
+</mapper>

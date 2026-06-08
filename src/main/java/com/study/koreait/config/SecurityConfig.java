@@ -3,6 +3,8 @@ package com.study.koreait.config;
 import com.study.koreait.jwt.JwtAuthenticationEntryPoint;
 import com.study.koreait.jwt.JwtAuthenticationFilter;
 import com.study.koreait.jwt.JwtUtil;
+import com.study.koreait.oauth2.OAuth2Service;
+import com.study.koreait.oauth2.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +25,10 @@ public class SecurityConfig { // 시큐리티 관련 설정만
     // 필터를 빈으로 주입하지않고, 직접 new로 생성한다
     // Filter로 끝나는 빈이 등록되면, 자동으로 서블릿 필터를 등록함(체인에 등록하는게 x)
     private final JwtUtil jwtUtil;
+
+    // oauth2 관련 서비스 & 핸들러
+    private final OAuth2Service oAuth2Service;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     // 회원가입시 비밀번호는 평문으로 저장하면 안됨
     // 암호화를 해서 db에 저장해야함.
@@ -87,7 +93,10 @@ public class SecurityConfig { // 시큐리티 관련 설정만
         http.exceptionHandling(eHandler -> eHandler.authenticationEntryPoint(jwtAuthenticationEntryPoint()));
 
         // oauth2 소셜 로그인 설정
-        http.oauth2Login(Customizer.withDefaults());
+        http.oauth2Login(oauth2 ->
+                oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                        .successHandler(oAuth2SuccessHandler)
+        );
 
         return http.build();
     }
