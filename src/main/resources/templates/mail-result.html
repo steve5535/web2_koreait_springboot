@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 인증 결과</title>
+    <style>
+        body {
+           margin: 0;
+           font-family: Arial, sans-serif;
+           background: #f6f8fb;
+           color: #222;
+       }
+
+       main {
+           max-width: 520px;
+           margin: 120px auto;
+           padding: 32px;
+           background: #fff;
+           border: 1px solid #e5e7eb;
+           border-radius: 8px;
+       }
+
+       h1 {
+           margin: 0 0 16px;
+           font-size: 28px;
+       }
+
+       p {
+           margin: 0;
+           line-height: 1.6;
+       }
+
+       .success {
+           color: #0f766e;
+       }
+
+       .failed {
+           color: #b91c1c;
+       }
+    </style>
+</head>
+<body>
+    <main>
+        <h1 th:class="${status}" th:text="${status == 'success' ? '인증 완료' : '인증 실패'}" >인증결과</h1>
+        <p th:text="${message}">이메일 인증 결과입니다</p>
+    </main>
+</body>
+</html>

@@ -6,9 +6,7 @@ package com.study.koreait.controller.advice;
 // -> dispatcherServlet이 catch로 예외를 잡을 수 있음.
 // -> 해당예외를 처리할 수 있는 핸들러 컨트롤러를 찾는다.
 
-import com.study.koreait.exception.ProductException;
-import com.study.koreait.exception.StudentException;
-import com.study.koreait.exception.UserException;
+import com.study.koreait.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -56,24 +54,10 @@ public class GlobalExceptionHandler {
                 .body(errorMap);
     }
 
-    @ExceptionHandler(ProductException.class)
-    public ResponseEntity<?> handleProductException(ProductException e) {
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<?> handleBusinessException(BusinessException e) {
         return ResponseEntity
                 .status(e.getStatusCode())
-                .body(e.getMessage());
-    }
-
-    @ExceptionHandler(StudentException.class)
-    public ResponseEntity<?> handleStudentException(StudentException e) {
-        return ResponseEntity
-                .status(e.getStatusCode())
-                .body(e.getMessage());
-    }
-
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<?> handleUserException(UserException e) {
-        return ResponseEntity
-                .status(e.getStatus())
                 .body(e.getMessage());
     }
 

@@ -7,20 +7,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+// 감사용 테이블 엔티티
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Builder
-public class Users {
+@Data @Builder
+public class MailAuditLog {
+    private int logId;
     private String userId;
-    private String username;
-    private String password;
-    private String name;
     private String email;
+    private String eventType;
+    private String result;
+    private String message;
     private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private Boolean emailVerified;
-    private LocalDateTime emailVerifiedAt;
-
-    private Roles roles; // fk대신 객체 가짐 1:1 매핑
 }

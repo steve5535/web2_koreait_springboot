@@ -16,6 +16,8 @@
         <result property="password" column="password" />
         <result property="name" column="name" />
         <result property="email" column="email" />
+        <result property="emailVerified" column="email_verified" />
+        <result property="emailVerifiedAt" column="email_verified_at" />
         <result property="createAt" column="create_at" />
         <result property="updateAt" column="update_at" />
         <association property="roles" resultMap="roleResultMap" />
@@ -35,6 +37,8 @@
             u.password,
             u.name,
             u.email,
+            u.email_verified,
+            u.email_verified_at,
             u.create_at,
             u.update_at,
             r.role_id,
@@ -52,6 +56,8 @@
             u.password,
             u.name,
             u.email,
+            u.email_verified,
+            u.email_verified_at,
             u.create_at,
             u.update_at,
             r.role_id,
@@ -70,6 +76,8 @@
             u.password,
             u.name,
             u.email,
+            u.email_verified,
+            u.email_verified_at,
             u.create_at,
             u.update_at,
             r.role_id,

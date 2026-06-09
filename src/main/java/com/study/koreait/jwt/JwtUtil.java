@@ -68,6 +68,20 @@ public class JwtUtil {
         return header.substring("Bearer ".length());
     }
 
+    // 이메일 관련 //
+
+    public String generateEmailVerifyToken(String sub) {
+        long now = System.currentTimeMillis();
+
+        return Jwts.builder()
+                .subject(sub)
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + accessExpireMillis)) // 15분
+                .claim("type", "EMAIL_VERIFY")
+                .signWith(key)
+                .compact();
+    }
+
 
 
 }
