@@ -30,6 +30,17 @@
             (#{userId}, #{username}, #{password}, #{name} ,#{email}, 1)
     </insert>
 
+    <update id="updateEmailVerified">
+        update
+            users
+        set
+            email_verified = true,
+            email_verified_at = now()
+        where
+            user_id = #{userId}
+
+    </update>
+
     <select id="getUserByUsername" resultMap="userResultMap">
         select
             u.user_id,
@@ -87,7 +98,7 @@
             inner join roles r on u.role_id = r.role_id
         where
             u.user_id = #{userId}
-
     </select>
+
 
 </mapper>
